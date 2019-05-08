@@ -23,11 +23,11 @@
               <span>数据管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1" @click="Routeuser">用户列表</el-menu-item>
-              <el-menu-item index="1-2" @click="Restlist">商家列表</el-menu-item>
-              <el-menu-item index="1-3" @click="Rfood">食品列表</el-menu-item>
-              <el-menu-item index="1-4">订单列表</el-menu-item>
-              <el-menu-item index="1-5">管理员列表</el-menu-item>
+              <el-menu-item index="2-1" @click="Routeuser">用户列表</el-menu-item>
+              <el-menu-item index="2-2" @click="Restlist">商家列表</el-menu-item>
+              <el-menu-item index="2-3" @click="Rfood">食品列表</el-menu-item>
+              <el-menu-item index="2-4" @click="Rorder">订单列表</el-menu-item>
+              <el-menu-item index="2-5" @click="Radmin">管理员列表</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -37,8 +37,8 @@
               <span>添加商品</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">添加商铺</el-menu-item>
-              <el-menu-item index="1-2">添加商品</el-menu-item>
+              <el-menu-item index="3-1" @click="Raddrest">添加商铺</el-menu-item>
+              <el-menu-item index="3-2" @click="Raddfood">添加商品</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -48,7 +48,7 @@
               <span>图表</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">用户分布</el-menu-item>
+              <el-menu-item index="4-1" @click="Ruserdis">用户分布</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -58,7 +58,7 @@
               <span>编辑</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">文本编辑</el-menu-item>
+              <el-menu-item index="5-1" @click="Rword">文本编辑</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -68,7 +68,7 @@
               <span>设置</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">管理设置</el-menu-item>
+              <el-menu-item index="6-1">管理设置</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -78,7 +78,7 @@
               <span>说明</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">说明</el-menu-item>
+              <el-menu-item index="7-1">说明</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -116,6 +116,24 @@
       },
       Rfood(){
         this.$router.push({name:'Foodlist'})
+      },
+      Rorder(){
+        this.$router.push({name:'Orderlist'})
+      },
+      Radmin(){
+        this.$router.push({name:'Adminlist'})
+      },
+      Ruserdis(){
+        this.$router.push({name:'Userdislist'})
+      },
+      Raddrest(){
+        this.$router.push({name:'addrest'})
+      },
+      Rword(){
+        this.$router.push({name:'world'})
+      },
+      Raddfood(){
+        this.$router.push({name:'addfood'})
       }
 		}
 	}

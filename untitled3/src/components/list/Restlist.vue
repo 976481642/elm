@@ -46,14 +46,18 @@
       prop="descrption">
     </el-table-column>
       <el-table-column label="操作">
+        <template slot-scope="scope">
           <el-button
             size="mini"
             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button plain type="small">添加商品</el-button>
+          <el-button
+            size="mini"
+            @click="handleEdit1(scope.$index, scope.row)">添加商品</el-button>
           <el-button
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
       </el-table-column>
   </el-table>
   <div class="block">
@@ -64,7 +68,7 @@
       :current-page.sync="currentPage1"
       :page-size="20"
       layout="total, prev, pager, next"
-      :total="457">
+      :total="1000">
     </el-pagination>
   </div>
 </div>
@@ -94,13 +98,17 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        this.axios.get("https://elm.cangdu.org/shopping/restaurants?latitude=39.90469&longitude=116.407173&offset="+val+"&limit=20").then((res)=>{
+        this.axios.get("https://elm.cangdu.org/shopping/restaurants?latitude=39.90469&longitude=116.407173&offset="+((val-1)*20)+"&limit=20").then((res)=>{
           if(res){
             this.tableData5=res.data;
             console.log(this.tableData5);
           }
         })
-
+      },
+      handleEdit1(index,row){
+        console.log(index, row);
+        console.log(this.tableData5[index].id);
+        this.$router.push({name:"addfood",query:{id:this.tableData5[index].id}})
       }
     }
   }

@@ -11,13 +11,13 @@
           当日数据：
         </div>
         <div class="body1-1 body1-2">
-          <span>1</span><span>新增用户</span>
+          <span>{{newregistereduser}}</span><span>新增用户</span>
         </div>
         <div class="body1-1 body1-2">
-          <span>1</span><span>新增订单</span>
+          <span>{{newindent}}</span><span>新增订单</span>
         </div>
         <div class="body1-1 body1-2">
-          <span>1</span><span>新增管理员</span>
+          <span>{{newAdministrator}}</span><span>新增管理员</span>
         </div>
       </div>
 
@@ -26,55 +26,127 @@
           总数据：
         </div>
         <div class="body2-1 body2-2">
-          <span>1</span><span>新增用户</span>
+          <span>{{registereduser}}</span><span>新增用户</span>
         </div>
         <div class="body2-1 body2-2">
-          <span>1</span><span>新增订单</span>
+          <span>{{inden}}</span><span>新增订单</span>
         </div>
         <div class="body2-1 body2-2">
-          <span>1</span><span>新增管理员</span>
+          <span>{{Administrator}}</span><span>新增管理员</span>
         </div>
       </div>
     </div>
-    <div id="myChart" :style="{width: '1440px', height: '450px'}"></div>
+    <div id="Mychart" :style="{width: '1440px', height: '450px'}"></div>
   </div>
 </template>
 
 <script>
-	export default {
+  import time from 'time-formater'
+  export default {
 		name: "Home",
     data(){
 		  return{
-        msg: 'Welcome to Your Vue.js App',
+        arr0:[],
+        arr1:[],
+        arr2:[],
+        time:"",
+        newregistereduser:"",
+        newindent:"",
+        newAdministrator:"",
+        registereduser:"",
+        inden:"",
+        Administrator:"",
       }
     },
     mounted(){
-      this.drawLine();
+      this.axios.get("https://elm.cangdu.org/v1/users/count").then((res)=>{
+        if(res.data){
+          this.registereduser=res.data.count
+        }
+
+      });
+      this.axios.get("https://elm.cangdu.org/bos/orders/count").then((res)=>{
+        if(res.data){
+          this.inden=res.data.count
+        }
+
+      });
+      this.axios.get("https://elm.cangdu.org/admin/count").then((res)=>{
+        if(res.data){
+          this.Administrator=res.data.count
+        }
+
+      });
+      this.getSant();
     },
-    methods:{
+    methods: {
+      // 封装的  axios 方法
+      sent(val,time){
+        return new Promise((s,e)=>{
+          this.axios.get("https://elm.cangdu.org/statis/"+val+"/"+time+"/count").then(res=>{
+            s(res)
+          })
+        })
+      },
+
+      // 调用
+      getSant(){
+        const apiArr =[[],[],[]]
+        let dataArr=[]
+        //  循环出  今天之前的 前6天的 时间
+        for(var i=0;i<=6;i++){
+          let times=time(new Date()-(i*24*60*60*1000)).format('YYYY-MM-DD');
+          dataArr.push(times)
+        }
+        // 改变  顺序  时间从远到今 排序
+        this.time=dataArr.reverse()
+        dataArr.map(item=>{
+          apiArr[0].push(this.sent('user',item))
+          apiArr[1].push(this.sent('order',item))
+          apiArr[2].push(this.sent('admin',item))
+        })
+        let arr =[...apiArr[0],...apiArr[1],...apiArr[2]]
+        let resArr=[[],[],[]]
+        Promise.all(arr).then(res=>{
+          res.forEach((item,index)=>{
+            if(item.data.status==1){
+              resArr[Math.floor(index/7)].push(item.data.count)
+            }
+          })
+          this.arr0=resArr[0]
+          this.arr1=resArr[1]
+          this.arr2=resArr[2]
+
+
+          let a=this.arr0.length-1
+          let b=this.arr1.length-1
+          let c=this.arr2.length-1
+          this.newregistereduse=this.arr0[a]
+          console.log(this.newregistereduse)
+          this.newindent=this.arr1[b]
+          this.newAdministrator=this.arr2[c]
+          this.drawLine()
+        })
+      },
+
+
+      // 调用 折线图
       drawLine(){
-        // 基于准备好的dom，初始化echarts实例
-    let myChart = this.$echarts.init(document.getElementById('myChart'))
+
+
+        // 基于准备好的 dom 初始化 echarts 实例
+        var mychart=this.$echarts.init(document.getElementById('Mychart'))
         // 绘制图表
-        myChart.setOption({
-
-
+        mychart.setOption({
           title: {
-            text: '走势图'
+            text: '走势图',
           },
-
-
           tooltip: {
             trigger: 'axis'
           },
-
-
-
           legend: {
-            data:['新注册用户','新增订单',"新增管理员"]
+            data:['新注册用户','新增订单','新增管理员']
           },
-
-
           toolbox: {
             show: true,
             feature: {
@@ -90,7 +162,7 @@
           xAxis:  {
             type: 'category',
             boundaryGap: false,
-            data: ['2019-04-22','2019-04-23','2019-04-24','2019-04-25','2019-04-26','2019-04-27','2019-04-28']
+            data: this.time
           },
           yAxis: {
             type: 'value',
@@ -98,46 +170,54 @@
               formatter: '{value}'
             }
           },
+
           series: [
             {
               name:'新注册用户',
               type:'line',
-              data:[199, 113, 77, 50, 26, 1, 5],
+              data:this.arr0,
+
               markPoint: {
                 data: [
                   {type: 'max', name: '最大值'},
                   {type: 'min', name: '最小值'}
                 ]
               },
+
             },
             {
               name:'新增订单',
               type:'line',
-              data:[124, 3, 2, 30, 16, 4, 17],
+              data:this.arr1,
               markPoint: {
                 data: [
                   {type: 'max', name: '最大值'},
                   {type: 'min', name: '最小值'}
                 ]
               },
-            },{
-          name:'新增管理员',
-            type:'line',
-            data:[124, 129, 123, 124, 82, 17, 27],
-            markPoint: {
-            data: [
-              {type: 'max', name: '最大值'},
-              {type: 'min', name: '最小值'}
-            ]
-          },
-        }
 
+            },
+            // this.S1,this.F1,this.Fe1,this.Te1,this.Tw1,this.On1,this.J1
+            {
+              name:'新增管理员',
+              type:'line',
+              data:this.arr2,
+              markPoint: {
+                data: [
+                  {type: 'max', name: '最大值'},
+                  {type: 'min', name: '最小值'}
+                ]
+              },
 
+            }
           ]
-        });
-      }
-    }
 
+
+
+        })
+      },
+
+    },
 	}
 </script>
 

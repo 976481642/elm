@@ -10,6 +10,14 @@ const Home = resolve => require(['../components/page/Home'],resolve);
 const Userlist = resolve => require(['../components/list/Userlist'],resolve);
 const Restlist = resolve => require(['../components/list/Restlist'],resolve);
 const Foodlist = resolve => require(['../components/list/Foodlist'],resolve);
+const Orderlist = resolve => require(['../components/list/Orderlist'],resolve);
+const Adminlist = resolve => require(['../components/list/Adminlist'],resolve);
+const Userdislist = resolve => require(['../components/list/Userdislist'],resolve);
+const addrest = resolve => require(['../components/add/addrest'],resolve);
+const addfood = resolve => require(['../components/add/addfood'],resolve);
+const ceshi = resolve => require(['../components/ceshi'],resolve);
+// const Sant = resolve => require(['../components/Sant1'],resolve);
+const world = resolve => require(['../components/word/world'],resolve);
 Vue.use(Router);
 
 export default new Router({
@@ -49,7 +57,42 @@ export default new Router({
           path: 'Foodlist',
           name: 'Foodlist',
           component: Foodlist
-        }
+        },
+        {
+          path: 'Orderlist',
+          name: 'Orderlist',
+          component: Orderlist
+        },
+        {
+          path: 'Adminlist',
+          name: 'Adminlist',
+          component: Adminlist
+        },
+        {
+          path: 'Userdislist',
+          name: 'Userdislist',
+          component: Userdislist
+        },
+        {
+          path: 'addrest',
+          name: 'addrest',
+          component: addrest
+        },
+        {
+          path: 'ceshi',
+          name: 'ceshi',
+          component: ceshi
+        },
+        {
+          path: 'world',
+          name: 'world',
+          component: world
+        },
+        {
+          path: 'addfood',
+          name: 'addfood',
+          component: addfood
+        },
       ]
     },
 

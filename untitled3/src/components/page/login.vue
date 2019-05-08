@@ -5,7 +5,8 @@
         <div class="login">
           <p><el-input  placeholder="请输入用户名" v-model="username"></el-input></p>
           <p><el-input  placeholder="请输入密码" v-model="psw" show-password></el-input></p>
-          <el-button type="primary" @click="Routere">登录</el-button>
+          <el-button type="primary" @click="Routere" v-if="isShow" >登录</el-button>
+          <el-button type="primary" v-else disabled>登录</el-button>
           <p>温馨提示：</p>
           <p>未登录过的新用户，自动注册</p>
           <p>注册过的用户可凭账号密码登录</p>
@@ -20,32 +21,38 @@
     data(){
 		  return{
           username:'',
-          psw:''
+          psw:'',
+          isShow:true,
       }
     },
-    methods:{
-		  Routere(){
-        console.log(this.username);
-        console.log(this.psw);
-        let obj={
+
+    methods: {
+      setCookie(name,value,day){
+        var exp=new Date();
+        exp.setDate(exp.getDate()+day);
+        document.cookie=name+"="+unescape(value)+";exoires="+exp.toGMTString();
+      },
+      Routere() {
+        let obj = {
           user_name: this.username,
           password: this.psw
         };
-        this.axios.post("https://elm.cangdu.org/admin/login",obj).then((res)=>{
-          if(res){
-            console.log(res.data);
-            if(res.data.status==1) {
+        this.axios.post("https://elm.cangdu.org/admin/login", obj).then((res) => {
+          if (res) {
+            if (res.data.status == 1) {
               this.$router.push({name: "info"});
+              this.setCookie("SID", JSON.stringify(res.data), 7);
+              console.log(res.data);
+              this.isShow = false;
             }
-            if(res.data.status==0){
+            if (res.data.status == 0) {
               console.log(res.data.message);
+              this.isShow = false;
             }
           }
-        })
+        });
       },
-    },
-
-
+    }
 	}
 </script>
 
